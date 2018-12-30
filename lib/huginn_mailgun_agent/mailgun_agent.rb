@@ -10,6 +10,8 @@ module Agents
 
   class MailgunAgent < Agent
 
+    include FormConfigurable
+    
     can_dry_run!
     no_bulk_receive!
     default_schedule "never"
@@ -77,8 +79,15 @@ module Agents
          if opts['testing_mode'] == true 
            mg_client.enable_test_mode!
          end
+         bm_obj = Mailgun::BatchMessage.new
+         bm_obj.set_subject(interpolated(event)['subject'])
+         bm_obj.add_tag(interpolated(event)['msg-tag'])
+         bm_obj.from(opts['from_address'])
+#         bm_obj.
+                        
          results = conn.exec_query(sql)
          results.each do |row|
+           bm_obj.add_recipient(:to => result.email)
            # merge with incoming event
            # if boolify(interpolated['merge_event']) and event.payload.is_a?(Hash)
            #   row = event.payload.deep_merge(row)
@@ -87,7 +96,11 @@ module Agents
          end 
          if results.present?
           conn.close
- 
+         end
+         message_ids = mb_obj.finalize
+         result = mg_client.send_message(opts['mailgun_domain'], mb_obj)
+         result = event.payload.deep_merge(result)
+         create_event payload: results  
          log("Time: #{(Time.now - t1).round(2)}s, results.length: #{results.length if results.present?}, \n sql: \n #{sql}")
  
        rescue => error
