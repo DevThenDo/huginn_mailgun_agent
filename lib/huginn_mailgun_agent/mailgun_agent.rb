@@ -25,7 +25,8 @@ module Agents
         'merge_event' => 'false',
         'mailgun_apikey' => '',
         'from_address' => 'test@example.com',
-        'testing_mode' => 'false'
+        'testing_mode' => 'false',
+        'mailgun_domain' => '',
       }
     end
 
@@ -36,6 +37,7 @@ module Agents
     form_configurable :testing_mode, type: :boolean
     form_configurable :mailgun_apikey, type: :text
     form_configurable :from_address, type: :text
+    form_configurable :mailgun_domain, type: :text
     
     def validate_options
 
@@ -44,7 +46,8 @@ module Agents
       end
       errors.add(:base, "Mailgun API Key Missing") unless options['mailgun_apikey'].present?
       errors.add(:base, "Missing From Address") unless options['from_address'].present?
-    end
+      errors.add(:base, "Missing Mailgun Domain") unless options['mailgun_domain'].present?
+        
     end
 
     def working?
@@ -70,8 +73,10 @@ module Agents
  
        begin
          conn = Mysql2AgentConnection.establish_connection(connection_url).connection
-         mg_client = Mailgun::Client.new(options['mailgun_apikey'])
-         if options['testing_mode'] == true mg_client.enable_test_mode! 
+         mg_client = Mailgun::Client.new(opts['mailgun_apikey'])
+         if opts['testing_mode'] == true 
+           mg_client.enable_test_mode!
+         end
          results = conn.exec_query(sql)
          results.each do |row|
            # merge with incoming event
