@@ -4,11 +4,11 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "huginn_mailgun_agent"
-  spec.version       = '0.1'
+  spec.version       = '1.0'
   spec.authors       = ["Justin Hammond"]
   spec.email         = ["justin@devthendo.io"]
 
-  spec.summary       = %q{Mailgun Agent that uses mysql queries for reciepients}
+  spec.summary       = %q{Sends bulk transactional emails via MailGun. Uses a Database connection to retrieve the recipients}
 #  spec.description   = %q{Write a longer description or delete this line.}
 
   spec.homepage      = "https://github.com/DevThenDo/huginn_mailgun_agent"

@@ -1,8 +1,34 @@
 # MailgunAgent
 
-Welcome to your new agent gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/huginn_mailgun_agent`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Sends bulk transactional emails via MailGun. Uses a Database connection to retrieve the recipients
+    
+To send emails to users, first create a Database and table to hold your recipients. 
+    
+`connection_url` is the database connection you want to use
+    
+`sql` should be the Select Query to select your users. It must return a `name` and `email` field. eg: `select name, email from users`
+    
+`mailgun_apikey` is your MailGun Private Key
+    
+`mailgun_domain` is the domain you wish to use with Mailgun
+    
+`mailgun_tracking` will enable both Open and Click Tracking in your emails (if enabled on your Mailgun Domain Account)
+    
+`testing_mode` will submit the messages to Mailgun, but not actually send the emails to the recipients
+    
+`from_address` is the address you want to the emails to come from (can be overridden in a event payload)
+    
+If `merge_event` is true, then the Mailgun Message ID is merged with the original payload
+    
+Payload Fields:
+    
+ * `from_address` allows you to override the default from message. Should be in this format: `name <email@address.com>`
+    
+ * `subject` is the email Subject
+    
+ * `message` is the Email Body (can be HTML if you want to enable tracking)
+    
+ * `tags` is either a single Tag or a array or Tags that you can use for Analytics on the MailGun Site
 
 ## Installation
 
@@ -20,23 +46,6 @@ And then execute:
 
     $ bundle
 
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-Running `rake` will clone and set up Huginn in `spec/huginn` to run the specs of the Gem in Huginn as if they would be build-in Agents. The desired Huginn repository and branch can be modified in the `Rakefile`:
-
-```ruby
-HuginnAgent.load_tasks(branch: '<your branch>', remote: 'https://github.com/<github user>/huginn.git')
-```
-
-Make sure to delete the `spec/huginn` directory and re-run `rake` after changing the `remote` to update the Huginn source code.
-
-After the setup is done `rake spec` will only run the tests, without cloning the Huginn source again.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
