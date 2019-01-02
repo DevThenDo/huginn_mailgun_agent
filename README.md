@@ -1,6 +1,6 @@
 # MailgunAgent
 
-![Gem Version](https://badge.fury.io/rb/huginn_mailgun_agent.svg)](https://badge.fury.io/rb/huginn_mailgun_agent)
+![Gem Version](https://badge.fury.io/rb/huginn_mailgun_agent.svg)
 
 Sends bulk transactional emails via MailGun. Uses a Database connection to retrieve the recipients
     
